@@ -1,0 +1,10 @@
+include $(abspath $(dir $(lastword $(MAKEFILE_LIST)))/../base/base.mk)
+rwildcard=$(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
+# https://www.gnu.org/software/make/manual/html_node/Call-Function.html
+recursive_call = $(foreach a,$(2),$(call $(1),$(a)))
+relative_to_absolute=$(realpath $1)
+pathsearch = $(firstword $(wildcard $(addsuffix /$(1),$(subst :, ,$(PATH)))))
+read_file_content=$(file < $(1))
+append_to_file=$(file >>$(1),$(2))
+write_to_file=$(file >$(1),$(2))
+empty_file=$(file >$(1),)
