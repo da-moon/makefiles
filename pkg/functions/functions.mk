@@ -92,18 +92,3 @@ $(or \
 )
 endef
 
-define replace_space_with_empty_line
-$(subst ${ },${\n},${1})
-endef
-
-define replace_empty_line_with_space
-$(subst ${\n},${ },${1})
-endef
-
-define remove_empty_line_
-$(subst ${\n}${\n},${\n},${1})
-endef
-
-define remove_empty_line
-$(subst $(\n)$(\n),,$(subst $(\n)$(\n),$(\n),$(1)))
-endef

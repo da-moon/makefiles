@@ -42,14 +42,19 @@ define replace_or_update
 	var_name=$${var_name#'%'}; \
         $(call find_replace, $(1), $(2), $(3), $${4:-#}); \
 	if [ "$${!var_name}" ] && [ -f "$${file}.backup" ]; then \
-		$(call remove_matching_line, $$var_name, $${file}.backup); \
+		$(call remove_matching_lines, $$var_name, $${file}.backup); \
 	fi
 endef
 
 # Search for matching string, and remove the entire line
-define remove_matching_line
+define remove_matching_lines
 	$(call trim, find, $(1)); \
 	$(call trim, file, $(2)); \
 	sed -i.bak -e "/$${find}/d" $$file && rm -f $${file}.bak
+endef
+
+define remove_empty_lines
+	$(call trim, file, $(1)); \
+	sed -i.bak -e "/^[[:space:]]*$$/d" $$file && rm -f $${file}.bak
 endef
 

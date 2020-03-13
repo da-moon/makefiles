@@ -42,10 +42,6 @@ PSEP = $(strip $(SEP))
 PWD ?= $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 # ${ } is a space
 ${space} := ${space}
-define \n
-
-
-endef
 BLACK = 0
 RED = 1
 GREEN = 2

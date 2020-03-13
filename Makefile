@@ -10,33 +10,31 @@ SELF_DIR := $(dir $(THIS_FILE))
 
 flatten: clean
 	- $(call print_running_target)
-	- $(eval path=$(PWD)/pkg)
+	- $(eval pkg_path=$(PWD)/pkg)
+	- $(eval targets_path=$(PWD)/targets)
+	- $(eval TARGET = $(call rwildcard,$(pkg_path),*.mk) $(call rwildcard,$(targets_path),*.mk))
 	- $(eval output=$(PWD)/flattened/Makefile)
-	- $(eval TARGET = $(call rwildcard,$(path),*.mk))
 	- $(foreach O,\
 			$(sort $(TARGET)),\
 			$(call append_to_file,\
 				$(output),$(call read_file_content,$O)\
 			)\
 		)
-	- $(call print_completed_target,flattened library files)
-	# - $(call write_to_file,$(output),$(call remove_empty_line,$(call read_file_content,$(output))))
-	# - $(call print_completed_target,removed empty lines)
-	- $(eval path=$(PWD)/targets)
-	- $(eval TARGET = $(call rwildcard,$(path),*.mk))
-	- $(foreach O,\
-			$(sort $(TARGET)),\
-			$(call append_to_file,\
-				$(output),$(call read_file_content,$O)\
-			)\
-		)
-	- $(call print_completed_target,added targets to flattened library)
+	- $(call print_completed_target,flattened makefiles)
+	- $(call remove_matching_lines, #, $(output))
+	- $(call print_completed_target,removed comments)
+	- $(call remove_matching_lines, include, $(output))
+	- $(call print_completed_target,removed includes)
+	- $(call remove_empty_lines, $(output))
+	- $(call print_completed_target,removed empty lines)
 	- $(call print_completed_target)
-	
+
 remove-lines: 
-	- $(eval TARGET=$(PWD)/README.md)
-	- $(call write_to_file,$(TARGET).md,$(call remove_empty_line,$(call read_file_content,$(TARGET))))
-	- $(MAKE) -f $(THIS_FILE) check_root
+	- $(RM) $(PWD)/README-backup.md
+	- $(CPF) $(PWD)/README.md $(PWD)/README-backup.md
+	- $(call remove_matching_lines, #, $(PWD)/README-backup.md)
+	- $(call remove_empty_lines, $(PWD)/README-backup.md)
+	
 clean: 
 	- $(eval res=$(PWD)/flattened/Makefile)
 	- $(RM) $(res)
