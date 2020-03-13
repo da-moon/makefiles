@@ -34,15 +34,8 @@ remove-lines:
 	- $(CPF) $(PWD)/README.md $(PWD)/README-backup.md
 	- $(call remove_matching_lines, #, $(PWD)/README-backup.md)
 	- $(call remove_empty_lines, $(PWD)/README-backup.md)
-	
+
 clean: 
 	- $(eval res=$(PWD)/flattened/Makefile)
 	- $(RM) $(res)
 
-
-# ----
-# $(eval loaded=$(call read_file_content,$(1)))
-# echo $$blah
-
-	# - $(info $(TARGET))
-	# - $(call generate_file,$(TARGET))
