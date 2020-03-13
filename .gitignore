@@ -189,7 +189,8 @@ typings/
 ################################
 ############ Custom ############
 ################################
-flattened/bin
+go/bin
+go/Makefile
 bin
 tmp
 web/vue.js/dist

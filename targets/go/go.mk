@@ -1,13 +1,23 @@
 include $(abspath $(dir $(lastword $(MAKEFILE_LIST)))/../../pkg/functions/functions.mk)
 include $(abspath $(dir $(lastword $(MAKEFILE_LIST)))/../../pkg/git/git.mk)
+ifeq ($(OS),Windows_NT)
+    GO_PATH = $(subst \,/,${GOPATH})
+else
+    GO_PATH = ${GOPATH}
+endif
 THIS_FILE := $(lastword $(MAKEFILE_LIST))
+SELF_DIR := $(dir $(THIS_FILE))
+
 GO_TARGET = $(notdir $(patsubst %/,%,$(dir $(wildcard ./cmd/*/.))))
 CGO=0
 GO_ARCHITECTURE=amd64
 GO_IMAGE=golang:buster
 MOD=off
-.PHONY: go-build go-build-mac-os go-build-linux go-build-windows
-.SILENT: go-build go-build-mac-os go-build-linux go-build-windows 
+GO_PKG_DIR=$(call relative_to_absolute,$(SELF_DIR))
+.PHONY: go-build go-build-mac-os go-build-linux go-build-windows go-clean go-print
+.SILENT: go-build go-build-mac-os go-build-linux go-build-windows go-clean go-print
+go-print:
+	- $(info $(GO_PKG_DIR))
 
 go-build:
 	- $(CLEAR)
@@ -193,4 +203,12 @@ endif
 			-X github.com/da-moon/go-packages/build/version.BuildDate=${BUILDTIME}' \
 			-o .$(PSEP)bin$(PSEP)$$target$(PSEP)${GOOS}$(PSEP)${VERSION}$(PSEP)$$target .$(PSEP)cmd$(PSEP)$$target"; \
 	done
+    endif
+
+go-clean:
+	- $(CLEAR)
+    ifeq ($(DOCKER_ENV),true)
+	- @$(MAKE) --no-print-directory -f $(THIS_FILE) shell docker_image="${GO_IMAGE}" container_name="go_builder_container" mount_point="/go/src/github.com/da-moon/go-packages" cmd="rm -rf /go/src/github.com/da-moon/go-packages/bin/"
+    else
+	- $(RM) ./bin/
     endif

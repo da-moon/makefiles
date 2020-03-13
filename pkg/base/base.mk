@@ -11,11 +11,9 @@ ifeq ($(OS),Windows_NT)
     RMDIR = -RMDIR /S /Q
     MKDIR = -mkdir
     ERRIGNORE = 2>NUL || (exit 0)
-    GO_PATH = $(subst \,/,${GOPATH})
     SEP=\\
 else
     CLEAR = clear
-    GO_PATH = ${GOPATH}
     LS = ls
     TOUCH = touch
     CPF = cp -f

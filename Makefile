@@ -1,12 +1,10 @@
 include pkg/functions/functions.mk
 include pkg/color/color.mk
-# todo remove me ...
-include targets/os/os.mk
 
 THIS_FILE := $(firstword $(MAKEFILE_LIST))
 SELF_DIR := $(dir $(THIS_FILE))
-.PHONY: all flatten remove-lines clean 
-.SILENT: all flatten remove-lines clean 
+.PHONY: all flatten remove-lines clean go-example
+.SILENT: all flatten remove-lines clean go-example
 
 flatten: clean
 	- $(call print_running_target)
@@ -34,8 +32,10 @@ remove-lines:
 	- $(CPF) $(PWD)/README.md $(PWD)/README-backup.md
 	- $(call remove_matching_lines, #, $(PWD)/README-backup.md)
 	- $(call remove_empty_lines, $(PWD)/README-backup.md)
+go-example: flatten
+	- $(CPF) $(PWD)/flattened/Makefile $(PWD)/examples/go/Makefile
 
 clean: 
-	- $(eval res=$(PWD)/flattened/Makefile)
-	- $(RM) $(res)
-
+	- $(RM) $(PWD)/flattened/Makefile
+	- $(RM) $(PWD)/examples/go/Makefile
+	- $(RM) $(PWD)/examples/go/bin
