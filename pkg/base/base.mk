@@ -32,9 +32,33 @@ else
 DEVNUL := /dev/null
 WHICH := which
 endif
-nullstring :=
-space := $(nullstring) 
+
+# nullstring :=
+# space := $(nullstring)
+
+null :=
+space := ${null} ${null}
 PSEP = $(strip $(SEP))
 PWD ?= $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
+# ${ } is a space
+${space} := ${space}
+define \n
+
+
+endef
+BLACK = 0
+RED = 1
+GREEN = 2
+YELLOW = 3
+BLUE = 4
+MAGENTA = 5
+CYAN = 6
+WHITE = 7
 
 # https://renenyffenegger.ch/notes/development/make/functions/foreach
+# https://unix.stackexchange.com/questions/33629/how-can-i-populate-a-file-with-random-data
+# https://stackoverflow.com/questions/26554186/with-gnu-make-how-can-i-combine-multiple-files-into-one/26554251
+
+
+
+
